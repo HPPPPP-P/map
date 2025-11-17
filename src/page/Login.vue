@@ -23,6 +23,7 @@
             </ElForm>
             <div class="register-link">
                 <RouterLink to="register">注册</RouterLink>
+                <span @click="fillDemoAccount">演示账户</span>
             </div>
         </div>
     </div>
@@ -110,6 +111,10 @@ function login() {
             isInLoginProcess.value = false
         })
 }
+function fillDemoAccount() {
+    formLogin.value.email = 'test@163.com'
+    formLogin.value.password = 'test'
+}
 </script>
 
 <style scoped lang="scss">
@@ -158,6 +163,8 @@ function login() {
 }
 
 .register-link{
+    display: flex;
+    justify-content: space-between;
     font-size: 13px;
     text-align: center;
 }
