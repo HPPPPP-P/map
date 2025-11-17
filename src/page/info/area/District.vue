@@ -16,6 +16,22 @@
                 </ElFormItem>
             </ElForm>
         </div>
+        <div class="control-buttons">
+            <ElButton 
+                size="small" 
+                :type="isShowToolPanel ? 'primary' : 'default'" 
+                icon="Hide" 
+                @click="toggleToolPanel">
+                {{ isShowToolPanel ? '隐藏面板' : '显示面板' }}
+            </ElButton>
+            <ElButton 
+                size="small" 
+                :type="isLabelVisible ? 'primary' : 'default'" 
+                icon="PriceTag" 
+                @click="toggleMapLabels">
+                {{ isLabelVisible ? '隐藏标签' : '显示标签' }}
+            </ElButton>
+        </div>
     </div>
 </template>
 
@@ -36,6 +52,7 @@ const router = useRouter()
 const route = useRoute()
 
 const isShowToolPanel = ref(true)
+const isLabelVisible = ref(true)
 
 // 显示地图行政区的深度
 const DEPTH = {
@@ -117,11 +134,12 @@ onMounted(() => {
                 showDistrictInfoOf(event.lnglat)
             })
 
-            map.setFeatures(['bg', 'point', 'road', 'building'])
+            map.setFeatures(['bg', 'point', 'road', 'building', 'label'])
             // bg 区域面
             // point 兴趣点
             // road 道路和道路标记
             // building 建筑物
+            // label 标签（地名、路名等文字信息）
 
             // map.addControl(new AMap.ToolBar())
             map.addControl(new AMap.Scale())
@@ -433,6 +451,24 @@ function hideEverythingForScreenshot(){
     isShowToolPanel.value = false
 }
 
+function toggleToolPanel(){
+    isShowToolPanel.value = !isShowToolPanel.value
+}
+
+function toggleMapLabels(){
+    if (map) {
+        isLabelVisible.value = !isLabelVisible.value
+        if (isLabelVisible.value) {
+            // 显示所有最详细的信息：包含所有特征
+            // bg: 区域面, point: 兴趣点, road: 道路和道路标记, building: 建筑物, label: 标签
+            map.setFeatures(['bg', 'point', 'road', 'building', 'label'])
+        } else {
+            // 隐藏标签和兴趣点：只保留基础地图信息
+            map.setFeatures(['bg', 'road', 'building'])
+        }
+    }
+}
+
 onUnmounted(() => {
     map.clearInfoWindow() // 清除地图上的信息窗体
     map.destroy() // 销毁地图，释放内存
@@ -457,6 +493,16 @@ onUnmounted(() => {
     .ElFormItem{
         margin: 0 5px 0 0;
     }
+}
+
+.control-buttons{
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
 }
 
 
