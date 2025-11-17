@@ -1,10 +1,14 @@
 <template>
-    <div class="map-container">
-        <PointerDetailPanel :pointer="pointerInfo" v-if="isShowToolPanel">
+    <div class="map-container" v-if="isShowToolPanel">
+        <DetailPanel
+            :title="pointerInfo.name"
+            :markdownNote="pointerInfo.note"
+            :isShowQr="false"
+        >
             <template #footer>
                 <ElButton size="small" type="primary" icon="Hide" @click="hideEverythingForScreenshot">截图用，隐藏面板</ElButton>
             </template>
-        </PointerDetailPanel>
+        </DetailPanel>
         <div id="container" :style="`height: ${store.windowInsets.height}px`"></div>
         <div class="card input-panel" v-if="isShowToolPanel">
             <ElForm inline size="small">
@@ -15,22 +19,6 @@
                     <ElButton type="primary" @click="showDistrictOfAdcode">确定</ElButton>
                 </ElFormItem>
             </ElForm>
-        </div>
-        <div class="control-buttons">
-            <ElButton 
-                size="small" 
-                :type="isShowToolPanel ? 'primary' : 'default'" 
-                icon="Hide" 
-                @click="toggleToolPanel">
-                {{ isShowToolPanel ? '隐藏面板' : '显示面板' }}
-            </ElButton>
-            <ElButton 
-                size="small" 
-                :type="isLabelVisible ? 'primary' : 'default'" 
-                icon="PriceTag" 
-                @click="toggleMapLabels">
-                {{ isLabelVisible ? '隐藏标签' : '显示标签' }}
-            </ElButton>
         </div>
     </div>
 </template>
@@ -46,6 +34,7 @@ import {onMounted, onUnmounted, ref, watch} from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {key_service, key_web_js} from "@/mapConfig.ts";
+import DetailPanel from "@/layout/DetailPanel.vue";
 
 const store = useProjectStore()
 const router = useRouter()
@@ -499,15 +488,6 @@ onUnmounted(() => {
     }
 }
 
-.control-buttons{
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 1000;
-}
 
 
 </style>

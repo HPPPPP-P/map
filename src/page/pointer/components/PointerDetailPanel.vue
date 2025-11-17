@@ -14,6 +14,7 @@
                     @click="goToEditCurrentPointer"
                     icon="EditPen">编辑</ElButton>
             </div>
+            <slot name="footer"/>
         </template>
     </DetailPanel>
 </template>
