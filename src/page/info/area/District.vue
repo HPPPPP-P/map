@@ -341,7 +341,6 @@ function showDistrictBounds(locationName){
 
             locationInfo.districtList.forEach(item => {
                 addMarker(map, item)
-                markers.value.push(item)
             })
 
         } else {
@@ -363,12 +362,10 @@ function showDistrictBounds(locationName){
                 console.log(locationInfo.name)
                 locationInfo.districtList[0].districtList.forEach(item => {
                     addMarker(map, item)
-                    markers.value.push(item)
                 })
             } else { // 普通城市
                 locationInfo.districtList.forEach(item => {
                     addMarker(map, item)
-                    markers.value.push(item)
                 })
             }
 
@@ -459,12 +456,19 @@ function toggleMapLabels(){
     if (map) {
         isLabelVisible.value = !isLabelVisible.value
         if (isLabelVisible.value) {
-            // 显示所有最详细的信息：包含所有特征
-            // bg: 区域面, point: 兴趣点, road: 道路和道路标记, building: 建筑物, label: 标签
-            map.setFeatures(['bg', 'point', 'road', 'building', 'label'])
+            // 显示所有 markers
+            markers.value.forEach(marker => {
+                if (marker && marker.show) {
+                    marker.show()
+                }
+            })
         } else {
-            // 隐藏标签和兴趣点：只保留基础地图信息
-            map.setFeatures(['bg', 'road', 'building'])
+            // 隐藏所有 markers
+            markers.value.forEach(marker => {
+                if (marker && marker.hide) {
+                    marker.hide()
+                }
+            })
         }
     }
 }
